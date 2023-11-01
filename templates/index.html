@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Retirar Voucher</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #333;
+        text-align: center;
+        padding: 20px;
+    }
+
+    form {
+        margin: 20px auto;
+        width: 50%;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    input[type="submit"] {
+        background-color: #007BFF;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        border-radius: 4px;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    #quantidade-disponivel {
+        text-align: center;
+        font-size: 20px;
+        margin: 20px;
+    }
+
+    select {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    li {
+        padding: 5px 0;
+    }
+</style>
+<body>
+    <h1>Retirar Voucher</h1>
+
+    <div id="quantidade-disponivel">
+        <p>Quantidade de Vouchers Disponíveis:</p>
+        <ul>
+            <li>Mercado Pago: <span id="setor1-disponivel">{{ quantidade_disponivel['Mercado Pago'] }}</span></li>
+            <li>Mercado Livre: <span id="setor2-disponivel">{{ quantidade_disponivel['Mercado Livre'] }}</span></li>
+            <li>Diretoria: <span id="setor3-disponivel">{{ quantidade_disponivel['Diretoria'] }}</span></li>
+        </ul>
+    </div>
+
+    <form id="retirar-form" action="/retirar" method="post">
+        <label for="setor">Selecione o Setor:</label>
+        <select id="setor" name="setor" required>
+            <option value="Mercado Pago">Mercado Pago</option>
+            <option value="Mercado Livre">Mercado Livre</option>
+            <option value="Diretoria">Diretoria</option>
+        </select>
+        <br>
+        <label for="quantidade">Quantidade de Vouchers a Retirar:</label>
+        <input type="number" id="quantidade" name="quantidade" min="1" required>
+        <button type="submit" id="retirar-button">Retirar Vouchers</button>
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Códigos de Voucher Retirados</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <ul id="popup-content">
+                        <!-- Os códigos de voucher retirados serão exibidos aqui -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Função para abrir o modal e mostrar os códigos de voucher
+        function abrirModal(codigos) {
+            var modal = $("#myModal");
+            var content = $("#popup-content");
+            content.empty();
+
+            if (codigos.length > 0) {
+                var codigoHTML = '<ul>';
+                codigos.forEach(function (code) {
+                    codigoHTML += '<li>' + code + '</li>';
+                });
+                codigoHTML += '</ul>';
+                content.html(codigoHTML);
+            } else {
+                content.html('<p>Nenhum voucher retirado.</p>');
+            }
+
+            modal.modal('show');
+        }
+
+        // Função para enviar o formulário e lidar com a resposta
+        $('#retirar-form').submit(function (event) {
+            event.preventDefault();
+            var setor = $('#setor').val();
+            var quantidade = $('#quantidade').val();
+
+            $.ajax({
+                type: 'POST',
+                url: '/retirar',
+                data: { 'setor': setor, 'quantidade': quantidade },
+                success: function (data) {
+                    abrirModal(data);
+                },
+                error: function (error) {
+                    alert('Erro ao retirar vouchers: ' + error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
