@@ -4,11 +4,14 @@
 <head>
     <title>Retirar Voucher</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #f2f2f2;
+        background-color: #fff;
         margin: 0;
         padding: 0;
     }
@@ -40,16 +43,20 @@
         border-radius: 4px;
     }
 
-    input[type="submit"] {
+    button[type="submit"] {
         background-color: #007BFF;
         color: #fff;
         border: none;
         padding: 10px 20px;
         cursor: pointer;
         border-radius: 4px;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
     }
 
-    input[type="submit"]:hover {
+
+    button[type="submit"]:hover {
         background-color: #0056b3;
     }
 
@@ -76,23 +83,28 @@
         padding: 5px 0;
     }
 </style>
+
 <body>
+    <img src="https://actionline.com.br/wp-content/uploads/2022/04/logo-cuadrado_1200x630_acf_cropped.jpg" alt=""
+        style="height: 150px; width: 20%; display: block; margin: 0 auto;">
+
     <h1>Retirar Voucher</h1>
 
     <div id="quantidade-disponivel">
         <p>Quantidade de Vouchers Disponíveis:</p>
         <ul>
-            <li>Mercado Pago: <span id="setor1-disponivel">{{ quantidade_disponivel['Mercado Pago'] }}</span></li>
-            <li>Mercado Livre: <span id="setor2-disponivel">{{ quantidade_disponivel['Mercado Livre'] }}</span></li>
-            <li>Diretoria: <span id="setor3-disponivel">{{ quantidade_disponivel['Diretoria'] }}</span></li>
+            <li style="color: #0056b3;">Mercado Pago: <span id="setor1-disponivel">{{ quantidade_disponivel['Mercado_Pago'] }}</span></li>
+            <li style="color: #0056b3;">Mercado Livre: <span id="setor2-disponivel">{{ quantidade_disponivel['Mercado_Livre'] }}</span></li>
+            <li style="color: #0056b3;">Diretoria: <span id="setor3-disponivel">{{ quantidade_disponivel['Diretoria']
+                    }}</span></li>
         </ul>
     </div>
 
     <form id="retirar-form" action="/retirar" method="post">
         <label for="setor">Selecione o Setor:</label>
         <select id="setor" name="setor" required>
-            <option value="Mercado Pago">Mercado Pago</option>
-            <option value="Mercado Livre">Mercado Livre</option>
+            <option value="Mercado_Pago">Mercado Pago</option>
+            <option value="Mercado_Livre">Mercado Livre</option>
             <option value="Diretoria">Diretoria</option>
         </select>
         <br>
@@ -118,9 +130,7 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     <script>
         // Função para abrir o modal e mostrar os códigos de voucher
         function abrirModal(codigos) {
@@ -131,7 +141,7 @@
             if (codigos.length > 0) {
                 var codigoHTML = '<ul>';
                 codigos.forEach(function (code) {
-                    codigoHTML += '<li>' + code + '</li>';
+                    codigoHTML += '<li><b>Código:</b> ' + code + '</li>';
                 });
                 codigoHTML += '</ul>';
                 content.html(codigoHTML);
@@ -162,4 +172,5 @@
         });
     </script>
 </body>
+
 </html>

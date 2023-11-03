@@ -5,11 +5,10 @@ app = Flask(__name__)
 
 # Defina o caminho para os arquivos Excel dos setores
 planilhas_path = {
-    'Mercado Pago': 'mp-vouchers.xlsx',
-    'Mercado Livre': 'ml-vouchers.xlsx',
+    'Mercado_Pago': 'mp-vouchers.xlsx',
+    'Mercado_Livre': 'ml-vouchers.xlsx',
     'Diretoria': 'diretoria-vouchers.xlsx'
 }
-
 
 # Função para carregar a quantidade de vouchers disponíveis para cada setor
 def carregar_quantidade_disponivel():
@@ -21,7 +20,6 @@ def carregar_quantidade_disponivel():
         except Exception as e:
             quantidade_disponivel[setor] = 0
     return quantidade_disponivel
-
 
 @app.route('/')
 def index():
