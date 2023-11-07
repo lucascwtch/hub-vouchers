@@ -11,7 +11,7 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background-color: #fff;
+        background-color: #f7f7f7;
         margin: 0;
         padding: 0;
     }
@@ -55,7 +55,6 @@
         margin: 0 auto;
     }
 
-
     button[type="submit"]:hover {
         background-color: #0056b3;
     }
@@ -85,22 +84,21 @@
 </style>
 
 <body>
-    <img src="https://actionline.com.br/wp-content/uploads/2022/04/logo-cuadrado_1200x630_acf_cropped.jpg" alt=""
-        style="height: 150px; width: 20%; display: block; margin: 0 auto;">
-
     <h1>Retirar Voucher</h1>
 
     <div id="quantidade-disponivel">
         <p>Quantidade de Vouchers Disponíveis:</p>
         <ul>
-            <li style="color: #0056b3;">Mercado Pago: <span id="setor1-disponivel">{{ quantidade_disponivel['Mercado_Pago'] }}</span></li>
-            <li style="color: #0056b3;">Mercado Livre: <span id="setor2-disponivel">{{ quantidade_disponivel['Mercado_Livre'] }}</span></li>
+            <li style="color: #0056b3;">Mercado Pago: <span id="setor1-disponivel">{{
+                    quantidade_disponivel['Mercado_Pago'] }}</span></li>
+            <li style="color: #0056b3;">Mercado Livre: <span id="setor2-disponivel">{{
+                    quantidade_disponivel['Mercado_Livre'] }}</span></li>
             <li style="color: #0056b3;">Diretoria: <span id="setor3-disponivel">{{ quantidade_disponivel['Diretoria']
                     }}</span></li>
         </ul>
     </div>
 
-    <form id="retirar-form" action="/retirar" method="post">
+    <form id="retirar-form" action="/retirar" method="post" onsubmit="return validarTermos();">
         <label for="setor">Selecione o Setor:</label>
         <select id="setor" name="setor" required>
             <option value="Mercado_Pago">Mercado Pago</option>
@@ -110,12 +108,39 @@
         <br>
         <label for="quantidade">Quantidade de Vouchers a Retirar:</label>
         <input type="number" id="quantidade" name="quantidade" min="1" required>
+        <label for="termos">Declaro que li e concordo com os <a href="#" data-toggle="modal"
+                data-target="#modalTermos">Termos e Condições</a>:</label>
+        <input type="checkbox" id="termos" name="aceitar-termos" required>
         <button type="submit" id="retirar-button">Retirar Vouchers</button>
     </form>
 
-    <!-- Modal -->
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog">
+
+    <!-- Modal de Termos e Condições -->
+    <div class="modal fade" id="modalTermos" tabindex="-1" role="dialog" aria-labelledby="modalTermosLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalTermosLabel">Termos e Condições</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Conteúdo dos Termos e Condições -->
+                    <p>Aqui estão os termos e condições que você deve aceitar para prosseguir.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para mostrar os códigos de voucher retirados -->
+    <div class="modal fade" id="modalCodigosVoucher" tabindex="-1" role="dialog"
+        aria-labelledby="modalCodigosVoucherLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">Códigos de Voucher Retirados</h4>
@@ -129,48 +154,61 @@
             </div>
         </div>
     </div>
+</body>
 
+<script>
+    function validarTermos() {
+        if (!document.getElementById('termos').checked) {
+            alert('Você deve aceitar os termos e condições para retirar vouchers.');
+            return false;
+        }
+        return true;
+    }
 
-    <script>
-        // Função para abrir o modal e mostrar os códigos de voucher
-        function abrirModal(codigos) {
-            var modal = $("#myModal");
-            var content = $("#popup-content");
-            content.empty();
+    // Função para abrir o modal e mostrar os códigos de voucher
+    function abrirModal(codigos) {
+        var modal = $("#modalCodigosVoucher");
+        var content = $("#popup-content");
+        content.empty();
 
-            if (codigos.length > 0) {
-                var codigoHTML = '<ul>';
-                codigos.forEach(function (code) {
-                    codigoHTML += '<li><b>Código:</b> ' + code + '</li>';
-                });
-                codigoHTML += '</ul>';
-                content.html(codigoHTML);
-            } else {
-                content.html('<p>Nenhum voucher retirado.</p>');
-            }
-
-            modal.modal('show');
+        if (codigos.length > 0) {
+            var codigoHTML = '<ul>';
+            codigos.forEach(function (code) {
+                codigoHTML += '<li><b>Código:</b> ' + code + '</li>';
+            });
+            codigoHTML += '</ul>';
+            content.html(codigoHTML);
+        } else {
+            content.html('<p>Nenhum voucher retirado.</p>');
         }
 
-        // Função para enviar o formulário e lidar com a resposta
-        $('#retirar-form').submit(function (event) {
-            event.preventDefault();
-            var setor = $('#setor').val();
-            var quantidade = $('#quantidade').val();
+        modal.modal('show');
+    }
 
-            $.ajax({
-                type: 'POST',
-                url: '/retirar',
-                data: { 'setor': setor, 'quantidade': quantidade },
-                success: function (data) {
-                    abrirModal(data);
-                },
-                error: function (error) {
-                    alert('Erro ao retirar vouchers: ' + error);
-                }
-            });
+    // Função para enviar o formulário e lidar com a resposta
+    $('#retirar-form').submit(function (event) {
+        event.preventDefault();
+        var setor = $('#setor').val();
+        var quantidade = $('#quantidade').val();
+
+        // Verifique se a caixa de seleção de aceitar termos foi marcada
+        if (!document.getElementById('termos').checked) {
+            alert('Você deve aceitar os termos e condições para retirar vouchers.');
+            return;
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/retirar',
+            data: { 'setor': setor, 'quantidade': quantidade },
+            success: function (data) {
+                abrirModal(data.codigos_voucher);  // A resposta agora contém 'codigos_voucher'
+            },
+            error: function (error) {
+                alert('Erro ao retirar vouchers: ' + error.responseJSON.error);
+            }
         });
-    </script>
-</body>
+    });
+</script>
 
 </html>

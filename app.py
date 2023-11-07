@@ -30,16 +30,24 @@ def index():
 def retirar_vouchers():
     setor = request.form.get('setor')
     quantidade_str = request.form.get('quantidade')
+    aceitar_termos = request.form.get('aceitar-termos')
 
-    if not quantidade_str:
-        return 'A quantidade não foi fornecida.', 400
+    # Verifique se a caixa de seleção de aceitar termos foi marcada
+    if aceitar_termos != 'on':
+        return jsonify({'error': 'Você deve aceitar os Termos e Condições para retirar vouchers.'}), 400
+
+
+    # Verifique se a caixa de seleção de aceitar termos foi marcada
+    if aceitar_termos != 'on':
+        return jsonify({'error': 'Você deve aceitar os Termos e Condições para retirar vouchers.'}), 400
+
 
     try:
         quantidade = int(quantidade_str)
 
         # Verifique se o setor selecionado é válido
         if setor not in planilhas_path:
-            return 'Setor inválido.', 400
+            return jsonify({'error': 'Setor inválido.'}), 400
 
         planilha_path = planilhas_path[setor]
 
@@ -51,10 +59,10 @@ def retirar_vouchers():
             vouchers_disponíveis = df[df['Status'] == 'Disponível']
 
             if quantidade <= 0:
-                return 'A quantidade deve ser maior que zero.', 400
+                return jsonify({'error': 'A quantidade deve ser maior que zero.'}), 400
 
             if quantidade > vouchers_disponíveis.shape[0]:
-                return 'Não há vouchers suficientes disponíveis na planilha do setor {}.'.format(setor), 400
+                return jsonify({'error': 'Não há vouchers suficientes disponíveis na planilha do setor {}.'.format(setor)}), 400
 
             # Seleciona os vouchers disponíveis para retirada
             vouchers_retirados = vouchers_disponíveis.head(quantidade)
@@ -68,13 +76,13 @@ def retirar_vouchers():
             # Recolha os códigos de voucher retirados
             codigos_voucher = vouchers_retirados['Códigos de Voucher'].tolist()
 
-            return jsonify(codigos_voucher)
+            return jsonify({'codigos_voucher': codigos_voucher})
 
         except Exception as e:
-            return 'Erro ao processar a planilha do setor {}: {}'.format(setor, str(e)), 500
+            return jsonify({'error': 'Erro ao processar a planilha do setor {}: {}'.format(setor, str(e))}), 500
 
     except ValueError:
-        return 'A quantidade deve ser um número inteiro válido.', 400
+        return jsonify({'error': 'A quantidade deve ser um número inteiro válido.'}), 400
 
 if __name__ == '__main__':
     app.run(debug=True)
