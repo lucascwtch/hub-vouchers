@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Códigos de Voucher</title>
-    <!-- Adicione o link para o Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
     <style>
         body {
             background-color: #f8f9fa;
@@ -38,8 +38,10 @@
 </head>
 
 <body>
+
     <div class="container">
         <h1 class="mt-4">Códigos de Voucher</h1>
+        <p class="mt-4" id="retirado-por">Retirados:</p>
         <ul class="mt-4">
             {% for codigo in codigos_voucher %}
             <li>Voucher {{ loop.index }}: {{ codigo }}</li>
@@ -48,6 +50,8 @@
         <!-- Adicione o botão de voltar -->
         <a href="/" class="btn btn-primary btn-back">Voltar</a>
     </div>
+
+
 </body>
 
 </html>

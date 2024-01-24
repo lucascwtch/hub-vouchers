@@ -9,31 +9,117 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #495057;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #modalTermos .modal-dialog {
+            max-width: 80%;
+        }
+
+        .voucher-count {
+            color: #28a745;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Retirar Voucher</h1>
+    <div class="container">
+        <h1>Retirar Voucher</h1>
 
-        <div class="mb-4">
-            <p>Quantidade de Vouchers Disponíveis:</p>
-            <ul class="list-unstyled">
-                <li style="color: #0056b3;">Mercado Pago: <span id="setor1-disponivel">{{
-                        quantidade_disponivel['Mercado_Pago'] }}</span></li>
-                <li style="color: #0056b3;">Mercado Livre: <span id="setor2-disponivel">{{
-                        quantidade_disponivel['Mercado_Livre'] }}</span></li>
-                <li style="color: #0056b3;">Diretoria: <span id="setor3-disponivel">{{
-                        quantidade_disponivel['Diretoria'] }}</span></li>
-            </ul>
-        </div>
+        <p>Quantidade de Vouchers Disponíveis:</p>
+        <ul class="list-unstyled">
+            <li>Mercado Pago: <span id="setor1-disponivel" class="voucher-count">{{
+                    quantidade_disponivel['Mercado_Pago'] }}</span></li>
+            <li>Mercado Livre: <span id="setor2-disponivel" class="voucher-count">{{
+                    quantidade_disponivel['Mercado_Livre'] }}</span></li>
+            <li>Diretoria: <span id="setor3-disponivel" class="voucher-count">{{ quantidade_disponivel['Diretoria']
+                    }}</span></li>
+            <li>Claro: <span id="setor4-disponivel" class="voucher-count">{{ quantidade_disponivel['Claro'] }}</span>
+            </li>
+            <li>Vivo: <span id="setor5-disponivel" class="voucher-count">{{ quantidade_disponivel['Vivo'] }}</span></li>
+            <li>Kroton: <span id="setor6-disponivel" class="voucher-count">{{ quantidade_disponivel['Kroton'] }}</span>
+            </li>
+        </ul>
 
         <form id="retirar-form" action="/retirar" method="post" onsubmit="return validarFormulario();">
+            <div class="form-group">
+                <label for="nome">Nome:</label>
+                <input type="text" class="form-control" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cpf">CPF:</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" required>
+            </div>
+
             <div class="form-group">
                 <label for="setor">Selecione o Setor:</label>
                 <select class="form-control" id="setor" name="setor" required>
                     <option value="Mercado_Pago">Mercado Pago</option>
                     <option value="Mercado_Livre">Mercado Livre</option>
                     <option value="Diretoria">Diretoria</option>
+                    <option value="Claro">Claro</option>
+                    <option value="Vivo">Vivo</option>
+                    <option value="Kroton">Kroton</option>
+
+
                 </select>
             </div>
 
@@ -50,21 +136,85 @@
 
             <button type="submit" class="btn btn-primary">Retirar Vouchers</button>
         </form>
+
+
+
     </div>
 
-    <!-- Modal de Termos e Condições -->
     <div class="modal fade" id="modalTermos" tabindex="-1" role="dialog" aria-labelledby="modalTermosLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTermosLabel">Termos e Condições</h5>
+                    <h5 class="modal-title" id="modalTermosLabel">Termos de uso da rede sem fio Actionline Convidado!</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Aqui estão os termos e condições que você deve aceitar para prosseguir.</p>
+                    <p>
+
+
+                        O acesso à rede sem fio é permitido somente aos visitantes devidamente liberados via voucher temporário de acesso. O acesso é pessoal e intransferível, sendo o visitante o único responsável por qualquer ato
+                        (legal ou ilegal) decorrente do uso da rede a partir de seu acesso. O visitante deve conhecer as regras e penalidades envolvidas na utilização desta rede, abaixo descritas.
+                        <br><br>
+                        
+                        <b>Regras:</b>
+                        <br>
+                        – Não se fazer passar por outra pessoa ou dissimular sua identidade quando utilizar os recursos
+                        computacionais;
+                        <br>
+                        – Responsabilizar-se pela sua identidade eletrônica, senha ou outro dispositivo de segurança, negando
+                        revelá-la a terceiros;
+                        <br>
+                        – Manter seus dispositivos pessoais (notebooks, smartphones, etc.) com softwares e antivírus
+                        atualizados;
+                        <br>
+                        – Não usar a rede para trafegar informações confidenciais e/ou sigilosas, salvo quando utilizado algum
+                        meio seguro de transmissão (vpn, conexões cifradas, etc.);
+                        <br>
+                        – Responder pelo mau uso dos recursos computacionais em qualquer circunstância;
+                        <br>
+                        – Responder por atos que violem as regras de uso dos recursos computacionais, estando, portanto,
+                        sujeito às penalidades definidas na política de uso desses recursos.
+                        <br><br>
+                        
+                        <b>Considera-se violação das regras:</b>
+
+                        <br>
+                        – Infringir qualquer lei ou regulamento local, estadual, nacional ou internacional aplicável;
+                        <br>
+                        – Acessar, mostrar, armazenar ou transmitir texto, imagens ou sons que possam ser considerados
+                        ofensivos ou abusivos;
+                        <br>
+                        – Utilizar os recursos computacionais da Actionline para constranger, assediar, ameaçar ou perseguir
+                        qualquer pessoa;
+                        <br>
+                        – Efetuar ou tentar efetuar qualquer tipo de acesso não autorizado aos recursos computacionais da
+                        Actionline;
+                        <br>
+                        – Utilizar os recursos computacionais da Actionline para invadir, alterar ou destruir recursos
+                        computacionais de outras instituições;
+                        <br>
+                        – Violar ou tentar violar os sistemas de segurança, quebrando ou tentando adivinhar a identidade
+                        eletrônica de outro usuário, senhas ou outros dispositivos de segurança;
+                        <br>
+                        – Interceptar ou tentar interceptar a transmissão de dados através de monitoração;
+                        <br>
+                        – Provocar interferência em serviços de outros usuários ou o seu bloqueio, provocando o
+                        congestionamento da rede de dados, inserindo vírus ou tentando a apropriação indevida dos recursos
+                        computacionais da Actionline;
+                        <br>
+                        – Utilizar os recursos computacionais da Actionline para fins comerciais ou políticos, tais como mala
+                        direta, spams ou propaganda política;
+                        <br>
+                        – Consumir inutilmente os recursos computacionais da Actionline de forma intencional.
+                        <br><br>
+                        
+                        <b>Penalidades:</b>
+                        <br>
+                        A violação das regras está sujeita às penas previstas em lei.
+                    </p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
@@ -73,91 +223,51 @@
         </div>
     </div>
 
-    <!-- Modal de Códigos de Voucher -->
-    <div class="modal fade" id="modalCodigosVoucher" tabindex="-1" role="dialog"
-        aria-labelledby="modalCodigosVoucherLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalCodigosVoucherLabel">Códigos de Voucher</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="popup-content">
-                    <!-- O conteúdo dos códigos de voucher será exibido aqui -->
-                </div>
-                <div class="modal-footer">
-                    <button id="retirar-button" type="button" class="btn btn-secondary"
-                        data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Seção de Scripts -->
     <script>
-        // Função de inicialização do modal
-        $('#modalCodigosVoucher').on('show.bs.modal', function (event) {
-            // Limpa o conteúdo do modal ao ser exibido
-            var content = $(this).find('.modal-body');
-            content.empty();
-        });
-
+        // Função para verificar se há vouchers disponíveis
+        function verificarVouchersDisponiveis(quantidadeDisponivel) {
+            var totalDisponiveis = quantidadeDisponivel.disponiveis + quantidadeDisponivel.usados;
+    
+            if (totalDisponiveis === 0) {
+                // Nenhum voucher disponível, exibir a mensagem
+                $('#mensagem-vouchers-indisponiveis').show();
+                $('#retirar-form').hide();  // Oculta o formulário
+            } else {
+                // Vouchers disponíveis, exibir o formulário
+                $('#mensagem-vouchers-indisponiveis').hide();
+                $('#retirar-form').show();
+            }
+        }
+    
         // Atualize a função para lidar com o clique no botão de envio
         $('#retirar-button').click(function (event) {
             event.preventDefault();
-
-            // Simplificação da validação
+    
             if (!$('#termos').is(':checked')) {
                 alert('Você deve aceitar os termos e condições para retirar vouchers.');
                 return;
             }
-
-            var setor = $('#setor').val();
-            var quantidade = $('#quantidade').val();
-
-            $.ajax({
-                type: 'POST',
-                url: '/retirar',
-                data: { 'setor': setor, 'quantidade': quantidade },
-                success: function (data) {
-                    console.log('Resposta do servidor:', data); // Adicione esta linha
-                    // Atualize a chamada da função para abrir o modal
+    
+            var data = {
+                'setor': $('#setor').val(),
+                'quantidade': $('#quantidade').val(),
+                'nome': $('#nome').val(),
+                'cpf': $('#cpf').val()
+            };
+    
+            $.post('/retirar', data)
+                .done(function (data) {
+                    console.log('Resposta do servidor:', data);
                     abrirModalCodigos(data.codigos_voucher);
-                },
-                error: function (error) {
+                })
+                .fail(function (error) {
                     alert('Erro ao retirar vouchers: ' + error.responseJSON.error);
-                }
-            });
-        });
-
-        function abrirModalCodigos(codigos) {
-            console.log('Códigos de voucher:', codigos);
-
-            var modal = $("#modalCodigosVoucher");
-            var content = modal.find('.modal-body');
-
-            // Verifique se a lista de códigos é válida
-            if (!codigos || codigos.length === 0) {
-                content.html('<p>Nenhum voucher retirado.</p>');
-            } else {
-                var codigoHTML = '<ul>';
-                codigos.forEach(function (code) {
-                    codigoHTML += '<li><b>Código:</b> ' + code + '</li>';
                 });
-                codigoHTML += '</ul>';
-                content.html(codigoHTML);
-            }
+        });
+    
 
-            // Corrija a chamada para exibir o modal
-            modal.modal('show');
-        }
+
     </script>
-
-
-
 
 </body>
 
